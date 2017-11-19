@@ -285,16 +285,17 @@ function init(server, app, log, redSettings) {
 
     var fullPath = join(redSettings.httpNodeRoot, settings.path);
     var socketIoPath = join(fullPath, 'socket.io');
+    var middlewares = uiSettings.middlewares || [];
 
     io = socketio(server, {path: socketIoPath});
 
     fs.stat(path.join(__dirname, 'dist/index.html'), function(err, stat) {
         if (!err) {
-            app.use( join(settings.path), serveStatic(path.join(__dirname, "dist")) );
+            app.use( join(settings.path), ...middlewares, serveStatic(path.join(__dirname, "dist")) );
         }
         else {
             log.info("Dashboard using development folder");
-            app.use(join(settings.path), serveStatic(path.join(__dirname, "src")));
+            app.use(join(settings.path), ...middlewares, serveStatic(path.join(__dirname, "src")));
             var vendor_packages = [
                 'angular', 'angular-sanitize', 'angular-animate', 'angular-aria', 'angular-material', 'angular-touch',
                 'angular-material-icons', 'svg-morpheus', 'font-awesome',
