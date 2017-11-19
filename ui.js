@@ -290,7 +290,7 @@ function init(server, app, adminApp, log, redSettings) {
         next()
     }
     var middlewares = []
-    if (redSettings.useAdminAuth){middlewares.push(authMiddleware)}
+    if (uiSettings.useAdminAuth){middlewares.push(authMiddleware)}
     middlewares = [...middlewares, ...uiSettings.middlewares];
 
 
