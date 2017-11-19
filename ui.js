@@ -4,7 +4,7 @@ var inited = false;
 module.exports = function(RED) {
     if (!inited) {
         inited = true;
-        init(RED.server, RED.httpNode || RED.httpAdmin, RED.log, RED.settings);
+        init(RED.server, RED.httpNode || RED.httpAdmin, RED.httpAdmin, RED.log, RED.settings);
     }
     return {
         add: add,
@@ -274,7 +274,7 @@ function join() {
     return '/'+paths.map(function(e) {return e.replace(trimRegex,"");}).filter(function(e) {return e;}).join('/');
 }
 
-function init(server, app, log, redSettings) {
+function init(server, app, adminApp, log, redSettings) {
     var uiSettings = redSettings.ui || {};
     if ((uiSettings.hasOwnProperty("path")) && (typeof uiSettings.path === "string")) {
         settings.path = uiSettings.path;
@@ -286,11 +286,11 @@ function init(server, app, log, redSettings) {
     var fullPath = join(redSettings.httpNodeRoot, settings.path);
     var socketIoPath = join(fullPath, 'socket.io');
     var authMiddleware = function(req,res,next){
-        console.log('is Auth',RED.httpAdmin.req.isAuthenticated())
+        console.log('is Auth',adminApp.req.isAuthenticated())
         next()
     }
     var middlewares = []
-    if (uiSettings.useAdminAuth){middlewares.push(authMiddleware)}
+    if (redSettings.useAdminAuth){middlewares.push(authMiddleware)}
     middlewares = [...middlewares, ...uiSettings.middlewares];
 
 
