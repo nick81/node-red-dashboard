@@ -3,8 +3,9 @@ var inited = false;
 
 module.exports = function(RED) {
     if (!inited) {
+        console.log('RED',RED)
         inited = true;
-        init(RED.server, RED.httpNode || RED.httpAdmin, RED.httpAdmin, RED.log, RED.settings);
+        init(RED.server, RED.httpNode || RED.httpAdmin, RED.log, RED.settings);
     }
     return {
         add: add,
@@ -274,7 +275,7 @@ function join() {
     return '/'+paths.map(function(e) {return e.replace(trimRegex,"");}).filter(function(e) {return e;}).join('/');
 }
 
-function init(server, app, adminApp, log, redSettings) {
+function init(server, app, log, redSettings) {
     var uiSettings = redSettings.ui || {};
     if ((uiSettings.hasOwnProperty("path")) && (typeof uiSettings.path === "string")) {
         settings.path = uiSettings.path;
@@ -286,7 +287,7 @@ function init(server, app, adminApp, log, redSettings) {
     var fullPath = join(redSettings.httpNodeRoot, settings.path);
     var socketIoPath = join(fullPath, 'socket.io');
     var authMiddleware = function(req,res,next){
-        console.log('is Auth',adminApp)
+        console.log('is Auth',app)
         next()
     }
     var middlewares = []
