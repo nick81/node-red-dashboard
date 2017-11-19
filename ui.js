@@ -3,7 +3,9 @@ var inited = false;
 
 module.exports = function(RED) {
     if (!inited) {
-        console.log('RED',RED)
+        // console.log('RED',RED)
+        console.log(RED.getCredentials())
+        console.log(RED.adminAuth)
         inited = true;
         init(RED.server, RED.httpNode || RED.httpAdmin, RED.log, RED.settings);
     }
