@@ -285,7 +285,15 @@ function init(server, app, log, redSettings) {
 
     var fullPath = join(redSettings.httpNodeRoot, settings.path);
     var socketIoPath = join(fullPath, 'socket.io');
-    var middlewares = uiSettings.middlewares || [];
+    var authMiddleware = function(req,res,next){
+        console.log('is Auth',RED.httpAdmin.req.isAuthenticated())
+        next()
+    }
+    var middlewares = []
+    if (uiSettings.useAdminAuth){middlewares.push(authMiddleware)}
+    middlewares = [...middlewares, ...uiSettings.middlewares];
+
+
 
     io = socketio(server, {path: socketIoPath});
 
